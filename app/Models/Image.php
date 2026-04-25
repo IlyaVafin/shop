@@ -8,6 +8,7 @@ class Image extends Model
 {
     protected $fillable = [
         "path",
-        "good_id"
+        "good_id",
+        "default"
     ];
 }

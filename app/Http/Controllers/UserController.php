@@ -33,8 +33,10 @@ class UserController extends Controller
             "email" => "required|email",
             "password" => "required"
         ]);
+
         if (Auth::attempt($data)) {
             $user = Auth::user();
+            Auth::login($user);
             $token = Str::random();
             $hashed = hash("sha256", $token);
             PersonalAccessToken::create([

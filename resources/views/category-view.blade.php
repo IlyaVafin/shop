@@ -25,13 +25,13 @@
             <a class="tab-btn" href="./products.html">🏷️ Товары</a>
             <a class="tab-btn" href="./orders.html">📦 Заказы</a>
         </nav>
-        {{-- <div>
+        <div>
             <div class="card">
                 <div class="card-header">
                     <h2>{{ $category->title }}</h2>
                     <div class="action-btns">
                         <a class="btn-secondary" href="./categories.html">← К списку</a>
-                        <a class="btn-primary" href="/admin/category-edit/">✏️ Редактировать</a>
+                        <a class="btn-primary" href="/admin/category-edit/{{ $category->id }}">✏️ Редактировать</a>
                     </div>
                 </div>
                 <table class="data-table" aria-label="Информация о категории">
@@ -50,18 +50,16 @@
                         </tr>
                         <tr>
                             <th style="background:#f9fafb;">Кол-во товаров</th>
-                            <td><span class="badge">3</span></td>
+                            <td><span class="badge">{{ count($category->goods) }}</span></td>
                         </tr>
                     </tbody>
                 </table>
-            </div> --}}
+            </div>
             <div>
-
-
                 <div class="card">
                     <div class="card-header">
                         <h2>Товары в категории</h2>
-                        <a class="btn-primary" href="./product-create.html">➕ Новый товар</a>
+                        <a class="btn-primary" href="/admin/product-create">➕ Новый товар</a>
                     </div>
 
                     <table class="data-table">
@@ -74,26 +72,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>101</td>
-                                <td>Смартфон X</td>
-                                <td>499.99</td>
-                                <td class="action-btns">
-                                    <a class="btn-secondary" href="./product-view.html">👁️</a>
-                                    <a class="btn-secondary" href="./product-edit.html">✏️</a>
-                                    <a class="btn-danger" href="./category-view.html">🗑️</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>102</td>
-                                <td>Чехол</td>
-                                <td>19.99</td>
-                                <td class="action-btns">
-                                    <a class="btn-secondary" href="./product-view.html">👁️</a>
-                                    <a class="btn-secondary" href="./product-edit.html">✏️</a>
-                                    <a class="btn-danger" href="./category-view.html">🗑️</a>
-                                </td>
-                            </tr>
+                            @foreach ($category->goods as $good)
+                                <tr>
+                                    <td>{{ $good->id }}</td>
+                                    <td>{{ $good->title }}</td>
+                                    <td>{{ $good->price }}</td>
+                                    <td class="action-btns">
+                                        <a class="btn-secondary" href="./product-view.html">👁️</a>
+                                        <a class="btn-secondary" href="/admin/product-edit/{{$good->id}}">✏️</a>
+                                        <a class="btn-danger" href="./category-view.html">🗑️</a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

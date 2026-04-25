@@ -17,7 +17,7 @@ class CheckAdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if (!$user->superuser) return back();
+        if (!$user || !$user->superuser) return redirect("/");
         return $next($request);
     }
 }

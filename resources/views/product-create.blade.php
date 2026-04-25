@@ -31,29 +31,28 @@
                 <h2>Создать товар</h2>
                 <a class="btn-secondary" href="./products.html">← К списку</a>
             </div>
-
             <form action="/admin/product" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="productName">Название (обяз., макс 20)</label>
-                    <input class="@error('title') error-input @else '' @enderror" id="productName" name="title"
-                        type="text" maxlength="20" required>
+                    <input class="@error('title') error-input @enderror" id="productName" name="title" type="text"
+                        maxlength="20" required>
                     @error('title')
                         <span>{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="productDesc">Описание (макс 50)</label>
-                    <textarea class="@error('description') error-input @else '' @enderror" id="productDesc" name="description"
-                        rows="2" maxlength="50"></textarea>
+                    <textarea class="@error('description') error-input @enderror" id="productDesc" name="description" rows="2"
+                        maxlength="50"></textarea>
                     @error('description')
                         <span>{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
                     <label for="productPrice">Цена (больше 10, формат xx.xx)</label>
-                    <input class="@error('price') error-input @else '' @enderror" id="productPrice" name="price"
-                        type="text" placeholder="99.99" required>
+                    <input class="@error('price') error-input @enderror" id="productPrice" name="price" type="text"
+                        placeholder="99.99" required>
                     @error('price')
                         <span>{{ $message }}</span>
                     @enderror
@@ -69,8 +68,8 @@
                 </div>
                 <div class="form-group">
                     <label for="productImages">Изображения (макс 5, jpg/png, минимум 1 при создании)</label>
-                    <input class="@error('images') error-input @else '' @enderror" type="file" id="productImages"
-                        name="images" multiple accept="image/jpeg,image/png" required>
+                    <input class="@error('images') error-input @enderror" type="file" id="productImages"
+                        name="images[]" multiple accept="image/jpeg,image/png" required>
                     @error('images')
                         <span>{{ $message }}</span>
                     @enderror

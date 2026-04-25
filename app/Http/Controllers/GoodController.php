@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Good;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 class GoodController extends Controller
@@ -15,13 +16,14 @@ class GoodController extends Controller
         $data = $req->validate([
             "title" => "required|max:20",
             "description" => "sometimes|max:50",
-            "price" => "required|integer|gt:10",
+            "price" => "required|numeric|gt:10",
             "category" => "required|string|max:15",
-            "images" => "required|mimes:jpg,jpeg,png|max:3584"
+            "images" => "array|min:1|max:5",
+            "images.*" => "required|mimes:jpg,jpeg,png|max:3584"
         ]);
+
         $category = Category::where('title', $data['category'])->first();
-        
-        if (!$category) return back()->withErrors(['category' => 'Категория не найдена']);
+
 
         $good = Good::create([
             "title" => $data['title'],
@@ -30,18 +32,64 @@ class GoodController extends Controller
             'category_id' => $category->id
         ]);
 
-        $path = Storage::disk('local')->putFile("good", $req->file("images"));
+        $imagesPaths = [];
+        foreach ($data['images'] as $index => $image) {
+            $imagesPaths[] = [
+                'path' => $image->store('good', 'public'),
+                'default' => $index === 0
+            ];
+        }
 
-        Image::create([
-            "path" => $path,
-            "good_id" => $good->id
-        ]);
+        $good->images()->createMany($imagesPaths);
 
         return back();
     }
+
     public function create()
     {
         $categories = Category::all();
         return view("product-create", compact('categories'));
+    }
+
+    public function edit(Good $product)
+    {
+        $categories = Category::all();
+        $product->load("images");
+        $product->load("category");
+        return view('product-edit', compact('product', "categories"));
+    }
+
+    public function update(Request $req, Good $product)
+    {
+        $data = $req->validate([
+            "title" => "sometimes|string|max:20",
+            "description" => "sometimes|string|max:50",
+            "price" => "sometimes|numeric|gt:10",
+            "category" => "sometimes|string",
+            "images" => "array|max:5",
+            "images.*" => "sometimes|mimes:jpg,jpeg,png|max:3584",
+        ]);
+
+        if ($req->has("category")) {
+            $category = Category::where("title", $data['category'])->first();
+            $product->category_id = $category->id;
+            $product->save();
+        }
+
+        if ($req->hasFile(['images'])) {
+            $countImages = $product->images()->count();
+            if ($countImages == 5) return back()->withErrors(["images" => "Too many images"]);
+            $images = [];
+            foreach ($data['images'] as $image) {
+                $images[] = [
+                    "path" => $image->store("good", "public"),
+                    "default" => false
+                ];
+            }
+            $product->images()->createMany($images);
+        }
+
+        $product->update(Arr::except($data, ['images']));
+        return back();
     }
 }

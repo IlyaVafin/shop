@@ -2,14 +2,31 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoodController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+Route::post("/admin/auth", function (Request $req) {
+    $data = $req->validate([
+        "email" => "required|email",
+        "password" => "required|min:5"
+    ]);
+    if (Auth::attempt($data)) {
+        $user = Auth::user();
+        Auth::login($user);
+        return redirect("/admin/category-create");
+    }
+    return back()->withErrors(["auth" => "Invalid credentials"]);
+});
+
+Route::get("/", function () {
+    return view("index");
 });
 
 
-Route::prefix("/admin")->group(function () {
+Route::prefix("/admin")->middleware('admin')->group(function () {
 
     Route::get("/category-create", [CategoryController::class, 'create']);
     Route::get("/category-edit/{category}", [CategoryController::class, 'edit']);
@@ -25,4 +42,12 @@ Route::prefix("/admin")->group(function () {
 
     Route::post("/product", [GoodController::class, 'store']);
     Route::patch("/product/{product}", [GoodController::class, 'update']);
+
+    Route::post("/logout", function (Request $req) {
+        Auth::logout();
+        $req->session()->invalidate();
+        $req->session()->regenerateToken();
+        return redirect("/");
+    });
+
 });

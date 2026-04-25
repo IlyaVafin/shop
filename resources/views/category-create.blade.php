@@ -15,8 +15,11 @@
                 <h1>🛍️ ShopManager</h1>
             </div>
             <div class="user-info">
-                <span class="user-email">admin@shop.com</span>
-                <a class="logout-btn" href="./index.html">Выйти</a>
+                <span class="user-email">{{ auth()->user()->email }}</span>
+                <form action="/admin/logout" method="POST">
+                    @csrf
+                    <button type="submit" class="logout-btn">Выйти</button>
+                </form>
             </div>
         </div>
 
@@ -35,10 +38,10 @@
             <form action="/admin/category" method="post">
                 <div class="form-group">
                     <label for="catName">Название (обяз., макс 15, кириллица, спецсимволы: пробел, тире)</label>
-                    <input type="text" id="catName" name="title" placeholder="Пример: Смартфоны" maxlength="15"
-                        required>
+                    <input class="@error('title') error-input @else '' @enderror" type="text" id="catName"
+                        name="title" placeholder="Пример: Смартфоны" maxlength="15" required>
                     @error('title')
-                        <span>{{ $message }}</span>
+                        <span class="error-text">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group">
