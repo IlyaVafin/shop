@@ -62,9 +62,14 @@ class CategoryController extends Controller
     {
         $goods = $category->goods()->select('id', 'title as name', 'description', 'price')->with('images:good_id,path,default')->get()->map(function ($item) {
             $images = $item->images->pluck('path');
-            $item->images_urls = $images;
             $defaultImage = $item->images->firstWhere("default", true);
             $item->default_img = $defaultImage->path;
+
+            $imagesWithoutDefault = $images->filter(function ($img) use ($defaultImage) {
+                return $img != $defaultImage->path;
+            })->values();
+
+            $item->images_urls = $imagesWithoutDefault;
             unset($item->images);
             return $item;
         });

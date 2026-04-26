@@ -39,6 +39,8 @@ Route::prefix("/admin")->middleware('admin')->group(function () {
     Route::get("/product-view/{product}", [GoodController::class, 'show']);
     Route::get("/products", [GoodController::class, 'index']);
 
+    Route::get("/orders", [OrderController::class, 'index']);
+
     Route::post("/category", [CategoryController::class, "store"]);
     Route::patch("/category/{category}", [CategoryController::class, 'update']);
 
@@ -46,12 +48,11 @@ Route::prefix("/admin")->middleware('admin')->group(function () {
     Route::patch("/product/{product}", [GoodController::class, 'update']);
     Route::delete("/product/{product}", [GoodController::class, 'destroy']);
 
-    Route::get("/orders", [OrderController::class, 'index']);
-
     Route::post("/logout", function (Request $req) {
         Auth::logout();
         $req->session()->invalidate();
         $req->session()->regenerateToken();
         return redirect("/");
     });
+
 });
