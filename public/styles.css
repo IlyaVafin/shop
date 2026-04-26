@@ -226,7 +226,6 @@ body {
 }
 
 .action-btns {
-    display: flex;
     gap: 8px;
     flex-wrap: wrap;
 }
@@ -321,6 +320,10 @@ body {
     margin-bottom: 28px;
 }
 
+.delete-product {
+    display: inline-block;
+    height: 42px;
+}
 
 /* status styles for orders */
 .status-success { background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 30px; display: inline-block; }

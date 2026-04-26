@@ -83,7 +83,7 @@
                                     <td class="action-btns">
                                         <a class="btn-secondary" href="/admin/product-view/{{ $good->id }}">👁️</a>
                                         <a class="btn-secondary" href="/admin/product-edit/{{ $good->id }}">✏️</a>
-                                        <form action="/admin/product/{{ $good->id }}" method="post">
+                                        <form class="delete-product" action="/admin/product/{{ $good->id }}" method="post">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn-danger">🗑️</button>

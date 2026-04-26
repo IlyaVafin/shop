@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->boolean("superuser"); 
+            $table->boolean("superuser");
             $table->string('password');
             $table->timestamps();
         });
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string("token");
             $table->boolean("is_valid");
             $table->dateTime("expires_at");
-            $table->foreignId("user_id")->constrained();
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
