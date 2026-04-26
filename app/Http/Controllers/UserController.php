@@ -23,6 +23,10 @@ class UserController extends Controller
                 "regex:/[#_\-\$]{1}/"
             ],
         ]);
+
+        $user = User::where("email", $data['email'])->first();
+        if ($user) return response()->json(['message' => "User with this email already exists"], 409);
+
         User::create($data + ["superuser" => false]);
         return response()->json(["message" => true], 201);
     }
@@ -33,6 +37,7 @@ class UserController extends Controller
             "email" => "required|email",
             "password" => "required"
         ]);
+
 
         if (Auth::attempt($data)) {
             $user = Auth::user();

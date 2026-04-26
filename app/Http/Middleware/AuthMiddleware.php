@@ -21,10 +21,8 @@ class AuthMiddleware
     {
         $token = $request->bearerToken();
         if (!$token) return response()->json(["message" => "Forbidden for you"], 403);
-        $tokenDb = PersonalAccessToken::where("token", $token)->first();
+        $tokenDb = PersonalAccessToken::where("token", hash("sha256", $token))->first();
         if (!$tokenDb || !$tokenDb->is_valid || now() > $tokenDb->expires_at) return response()->json(["message" => "Forbidden for you"], 403);
-        $user = User::where("id", $token);
-        Auth::login($user);
         return $next($request);
     }
 }

@@ -15,20 +15,23 @@
                 <h1>🛍️ ShopManager</h1>
             </div>
             <div class="user-info">
-                <span class="user-email">admin@shop.com</span>
-                <a class="logout-btn" href="./index.html">Выйти</a>
+                <span class="user-email">{{ auth()->user()->email }}</span>
+                <form action="/admin/logout" method="POST">
+                    @csrf
+                    <button type="submit" class="logout-btn">Выйти</button>
+                </form>
             </div>
         </div>
         <nav class="nav-tabs" aria-label="Разделы админ-панели">
-            <a class="tab-btn" href="./categories.html">📂 Категории</a>
-            <a class="tab-btn active" href="./products.html">🏷️ Товары</a>
+            <a class="tab-btn" href="/admin/categories">📂 Категории</a>
+            <a class="tab-btn active" href="/admin/products">🏷️ Товары</a>
             <a class="tab-btn" href="./orders.html">📦 Заказы</a>
         </nav>
 
         <div class="card">
             <div class="card-header">
                 <h2>Редактировать товар</h2>
-                <a class="btn-secondary" href="./product-view.html">← К просмотру</a>
+                <a class="btn-secondary" href="/admin/product-view/{{ $product->id }}">← К просмотру</a>
             </div>
             <form action="/admin/product/{{ $product->id }}" method="POST" enctype="multipart/form-data">
                 @method('PATCH')

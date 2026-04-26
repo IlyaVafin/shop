@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\CheckAdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            "admin" => CheckAdminMiddleware::class
+            "admin" => CheckAdminMiddleware::class,
+            'bearer' => AuthMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

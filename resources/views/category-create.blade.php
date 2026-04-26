@@ -32,7 +32,7 @@
         <div class="card">
             <div class="card-header">
                 <h2>Создать категорию</h2>
-                <a class="btn-secondary" href="./categories.html">← К списку</a>
+                <a class="btn-secondary" href="/admin/categories">← К списку</a>
             </div>
 
             <form action="/admin/category" method="post">
@@ -53,7 +53,7 @@
                     @enderror
                 </div>
                 <div class="action-btns" style="justify-content:flex-end;">
-                    <a class="btn-secondary" href="./categories.html">Отмена</a>
+                    <a class="btn-secondary" href="/admin/categories">Отмена</a>
                     <button type="submit" class="btn-primary">Сохранить</button>
                 </div>
             </form>

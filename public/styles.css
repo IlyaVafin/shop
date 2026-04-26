@@ -190,6 +190,7 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 .btn-danger:hover {

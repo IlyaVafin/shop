@@ -15,14 +15,17 @@
                 <h1>🛍️ ShopManager</h1>
             </div>
             <div class="user-info">
-                <span class="user-email">admin@shop.com</span>
-                <a class="logout-btn" href="./index.html">Выйти</a>
+                <span class="user-email">{{ auth()->user()->email }}</span>
+                <form action="/admin/logout" method="POST">
+                    @csrf
+                    <button type="submit" class="logout-btn">Выйти</button>
+                </form>
             </div>
         </div>
 
         <nav class="nav-tabs" aria-label="Разделы админ-панели">
-            <a class="tab-btn active" href="./categories.html">📂 Категории</a>
-            <a class="tab-btn" href="./products.html">🏷️ Товары</a>
+            <a class="tab-btn active" href="/admin/categories">📂 Категории</a>
+            <a class="tab-btn" href="/admin/products">🏷️ Товары</a>
             <a class="tab-btn" href="./orders.html">📦 Заказы</a>
         </nav>
         <div>
@@ -30,7 +33,7 @@
                 <div class="card-header">
                     <h2>{{ $category->title }}</h2>
                     <div class="action-btns">
-                        <a class="btn-secondary" href="./categories.html">← К списку</a>
+                        <a class="btn-secondary" href="/admin/categories">← К списку</a>
                         <a class="btn-primary" href="/admin/category-edit/{{ $category->id }}">✏️ Редактировать</a>
                     </div>
                 </div>
@@ -78,9 +81,13 @@
                                     <td>{{ $good->title }}</td>
                                     <td>{{ $good->price }}</td>
                                     <td class="action-btns">
-                                        <a class="btn-secondary" href="./product-view.html">👁️</a>
-                                        <a class="btn-secondary" href="/admin/product-edit/{{$good->id}}">✏️</a>
-                                        <a class="btn-danger" href="./category-view.html">🗑️</a>
+                                        <a class="btn-secondary" href="/admin/product-view/{{ $good->id }}">👁️</a>
+                                        <a class="btn-secondary" href="/admin/product-edit/{{ $good->id }}">✏️</a>
+                                        <form action="/admin/product/{{ $good->id }}" method="post">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit" class="btn-danger">🗑️</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

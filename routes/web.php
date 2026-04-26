@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GoodController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,7 @@ Route::prefix("/admin")->middleware('admin')->group(function () {
     Route::get("/category-create", [CategoryController::class, 'create']);
     Route::get("/category-edit/{category}", [CategoryController::class, 'edit']);
     Route::get("/category-view/{category}", [CategoryController::class, 'show']);
+    Route::get("/categories", [CategoryController::class, 'index']);
 
     Route::get("/product-create", [GoodController::class, 'create']);
     Route::get("/product-edit/{product}", [GoodController::class, 'edit']);
@@ -42,6 +44,9 @@ Route::prefix("/admin")->middleware('admin')->group(function () {
 
     Route::post("/product", [GoodController::class, 'store']);
     Route::patch("/product/{product}", [GoodController::class, 'update']);
+    Route::delete("/product/{product}", [GoodController::class, 'destroy']);
+
+    Route::get("/orders", [OrderController::class, 'index']);
 
     Route::post("/logout", function (Request $req) {
         Auth::logout();
@@ -49,5 +54,4 @@ Route::prefix("/admin")->middleware('admin')->group(function () {
         $req->session()->regenerateToken();
         return redirect("/");
     });
-
 });

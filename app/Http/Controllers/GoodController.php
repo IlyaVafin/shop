@@ -11,6 +11,19 @@ use Illuminate\Support\Facades\Storage;
 
 class GoodController extends Controller
 {
+    public function index()
+    {
+        $products = Good::with("images")->paginate(5)->getCollection();
+        return view('products', compact('products'));
+    }
+
+    public function show(Good $product)
+    {
+        $product->load('images');
+        $category = Category::where('id', $product->category_id)->first();
+        return view('product-view', compact('product', 'category'));
+    }
+
     public function store(Request $req)
     {
         $data = $req->validate([
@@ -90,6 +103,12 @@ class GoodController extends Controller
         }
 
         $product->update(Arr::except($data, ['images']));
+        return back();
+    }
+
+    public function destroy(Good $product)
+    {
+        $product->delete();
         return back();
     }
 }

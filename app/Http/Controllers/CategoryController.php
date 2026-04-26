@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function index()
+    {
+        $categories = Category::withCount('goods')->get();
+        return view('categories', compact('categories'));
+    }
     public function show(Category $category)
     {
         $category->load("goods");
@@ -43,5 +48,28 @@ class CategoryController extends Controller
         ]);
         $category->update($data);
         return back();
+    }
+
+    public function getCategories()
+    {
+        $categories = Category::select('id', 'title as name', 'description')->get();
+        return response()->json(["data" => [
+            ...$categories
+        ]]);
+    }
+
+    public function getCategoryGoods(Category $category)
+    {
+        $goods = $category->goods()->select('id', 'title as name', 'description', 'price')->with('images:good_id,path,default')->get()->map(function ($item) {
+            $images = $item->images->pluck('path');
+            $item->images_urls = $images;
+            $defaultImage = $item->images->firstWhere("default", true);
+            $item->default_img = $defaultImage->path;
+            unset($item->images);
+            return $item;
+        });
+        return response()->json(["data" => [
+            ...$goods,
+        ]]);
     }
 }
