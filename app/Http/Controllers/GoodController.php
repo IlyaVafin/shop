@@ -111,4 +111,21 @@ class GoodController extends Controller
         $product->delete();
         return back();
     }
+
+    public function getGood(Good $product)
+    {
+        $images = $product->images()->select('path', 'default')->get();
+        $defaultPath = $images->firstWhere('default', true);
+        $images_urls = $images->filter(function ($img) use ($defaultPath) {
+            return $img->path != $defaultPath->path;
+        });
+        $product->makeHidden(['created_at', 'updated_at', 'category_id', 'title']);
+        $product->name = $product->title;
+
+        return response()->json(["data" => [
+            ...$product->toArray(),
+            "images_urls" => $images_urls->pluck('path'),
+            "default_img" => $defaultPath->path
+        ]]);
+    }
 }
